@@ -1,0 +1,54 @@
+
+/* Exercício: Modifique o relatório mas agora para ver o ranking das vendas por tamanho. */
+
+SELECT 
+    TAMANHO,
+    LITROS_SABOR.ANO,
+    COUNT 
+    ROUND((LITROS_SABOR.QUANTIDADE / LITROS_TOTAL.QUANTIDADE) * 100,
+            2) AS PORCENTAGEM
+FROM
+    (SELECT 
+			TP.TAMANHO,
+            YEAR(NF.DATA_VENDA) AS ANO,
+            SUM(INF.QUANTIDADE) AS QUANTIDADE
+    FROM
+        tabela_de_produtos TP
+    INNER JOIN itens_notas_fiscais INF ON TP.CODIGO_DO_PRODUTO = INF.CODIGO_DO_PRODUTO
+    INNER JOIN notas_fiscais NF ON INF.NUMERO = NF.NUMERO
+    WHERE
+        YEAR(NF.DATA_VENDA) = 2016
+    GROUP BY TAMANHO
+    ORDER BY QUANTIDADE DESC) AS LITROS_SABOR
+        INNER JOIN
+    (SELECT 
+        YEAR(NF.DATA_VENDA) AS ANO,
+            SUM(INF.QUANTIDADE) AS QUANTIDADE
+    FROM
+        tabela_de_produtos TP
+    INNER JOIN itens_notas_fiscais INF ON TP.CODIGO_DO_PRODUTO = INF.CODIGO_DO_PRODUTO
+    INNER JOIN notas_fiscais NF ON INF.NUMERO = NF.NUMERO
+    WHERE
+        YEAR(NF.DATA_VENDA) = 2016
+    GROUP BY ANO
+    ORDER BY QUANTIDADE DESC) AS LITROS_TOTAL
+GROUP BY SABOR , LITROS_SABOR.ANO
+ORDER BY TOTAL_LITROS DESC;
+
+
+SELECT 
+			TP.TAMANHO,
+            YEAR(NF.DATA_VENDA) AS ANO,
+            SUM(INF.QUANTIDADE) AS QUANTIDADE,
+            
+    FROM
+        tabela_de_produtos TP
+    INNER JOIN itens_notas_fiscais INF ON TP.CODIGO_DO_PRODUTO = INF.CODIGO_DO_PRODUTO
+    INNER JOIN notas_fiscais NF ON INF.NUMERO = NF.NUMERO
+    
+    WHERE
+        YEAR(NF.DATA_VENDA) = 2016
+    GROUP BY TAMANHO
+    ORDER BY QUANTIDADE DESC;
+    
+    SELECT * FROM itens_notas_fiscais;
