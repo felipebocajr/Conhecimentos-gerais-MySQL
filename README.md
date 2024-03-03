@@ -1,2 +1,4 @@
 # Conhecimentos-gerais-MySQL
-Repositório onde armazenarei arquivos de DML, manipulações e consultas avançadas para MySQL. Projeto em que me aventurei pela primeira vez em band de dados relacionais.
+Bem-vindo ao repositório dedicado ao meu primeiro projeto pessoal MySQL onde exploro um banco de dados relacional. Aqui, você encontrará uma coleção de arquivos de DML (Data Manipulation Language), além de diversos exemplos de manipulações e consultas avançadas
+
+
