@@ -1,0 +1,32 @@
+
+SELECT * FROM VENDEDORES;
+
+SELECT * FROM SUCOS_VENDAS.TABELA_DE_VENDEDORES;
+
+SELECT * FROM VENDEDORES A
+INNER JOIN SUCOS_VENDAS.TABELA_DE_VENDEDORES B
+ON A.MATRICULA = SUBSTRING(B.MATRICULA, 3, 3);
+
+/* importando dados de outra tabela de outra base de dados */
+UPDATE VENDEDORES A 
+INNER JOIN SUCOS_VENDAS.TABELA_DE_VENDEDORES B
+ON A.MATRICULA = SUBSTRING(B.MATRICULA, 3, 3)
+SET A.FERIAS = B.DE_FERIAS;
+
+
+/* Podemos observar que os vendedores possuem bairro associados a eles. 
+Vamos aumentar em 30% o volume de compra dos clientes que possuem, 
+em seus endereços, bairros onde os vendedores possuam escritórios. */
+
+SELECT * FROM CLIENTES;
+SELECT * FROM VENDEDORES;
+
+SELECT A.CPF FROM CLIENTES A 
+INNER JOIN VENDEDORES B 
+ON A.BAIRRO = B.BAIRRO;
+
+UPDATE CLIENTES A INNER JOIN VENDEDORES B
+ON A.BAIRRO = B.BAIRRO
+SET A.VOLUME_DE_COMPRA = A.VOLUME_DE_COMPRA * 1.30;
+
+

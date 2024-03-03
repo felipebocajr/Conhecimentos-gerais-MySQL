@@ -1,0 +1,44 @@
+SELECT * FROM NOTAS;
+SELECT * FROM ITENS_NOTAS;
+SELECT * FROM TAB_FATURAMENTO;
+
+/* sem o TRIGGER UPDATE, ao atualizar a quantidade na tabela de notas,
+a tabela de faturamento não é atualizada simultaneamente */
+UPDATE ITENS_NOTAS SET QUANTIDADE = 200 WHERE NUMERO = 0102 AND CODIGO = 1002334;
+
+/* sem o TRIGGER DELETE, ao deletar uma linha na tabela de notas,
+a tabela de faturamento não é atualizada simultaneamente */
+DELETE FROM ITENS_NOTAS WHERE NUMERO = 0102 AND CODIGO = 1002334;
+
+/* criamos o TRIGGER UPDATE para atualizar a tabela de faturamento ao atualizar notas */
+DELIMITER //
+CREATE TRIGGER TG_CALCULA_FATURAMENTO_UPDATE AFTER UPDATE ON ITENS_NOTAS
+FOR EACH ROW BEGIN 
+  DELETE FROM TAB_FATURAMENTO;
+  INSERT INTO TAB_FATURAMENTO 
+  SELECT A.DATA_VENDA, SUM(B.QUANTIDADE * B.PRECO) AS TOTAL_VENDA FROM
+  NOTAS A INNER JOIN ITENS_NOTAS B
+  ON A.NUMERO = B.NUMERO
+  GROUP BY A.DATA_VENDA;
+END // 
+
+/* criamos o TRIGGER DELETE para atualizar a tabela de faturamento ao deletar notas */
+DELIMITER //
+CREATE TRIGGER TG_CALCULA_FATURAMENTO_DELETE AFTER DELETE ON ITENS_NOTAS
+FOR EACH ROW BEGIN 
+  DELETE FROM TAB_FATURAMENTO;
+  INSERT INTO TAB_FATURAMENTO 
+  SELECT A.DATA_VENDA, SUM(B.QUANTIDADE * B.PRECO) AS TOTAL_VENDA FROM
+  NOTAS A INNER JOIN ITENS_NOTAS B
+  ON A.NUMERO = B.NUMERO
+  GROUP BY A.DATA_VENDA;
+END // 
+
+/* devido ao TRIGGER UPDATE, ao atualizar a tabela de notas, 
+a tabela de faturamento é atualizada */
+UPDATE ITENS_NOTAS SET QUANTIDADE = 400
+WHERE NUMERO = 0100 AND CODIGO = 1002334;
+
+/* devido ao TRIGGER DELETE, ao deletar uma linha na tabela de notas, 
+a tabela de faturamento é atualizada */
+DELETE FROM ITENS_NOTAS WHERE NUMERO = 0104 AND CODIGO = 1002334;
